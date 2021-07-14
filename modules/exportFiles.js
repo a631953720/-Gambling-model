@@ -11,7 +11,6 @@ const {
     LOSE_BONUS_ARR,
     DEBUG_MODE
 } = process.env;
-console.log(DEBUG_MODE);
 
 function exportXlsx(params) {
     const testData = [
