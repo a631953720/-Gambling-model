@@ -5,12 +5,13 @@ const {
     DEBUG_MODE,
     WIN_BONUS_ARR,
     MIN_BET,
-    LOSE_BONUS_ARR
+    LOSE_BONUS_ARR,
+    INIT_MONEY
 } = process.env;
 
 const winBonusTable = transpoartArr(WIN_BONUS_ARR);
 const loseBonusTable = transpoartArr(LOSE_BONUS_ARR);
-
+console.log(winBonusTable)
 function random() {
     return Math.random();
 }
@@ -52,9 +53,17 @@ function action(interval, _global, times) {
             if (global.bet <= 0) global.bet = Number(MIN_BET);
         }
     }
+    global.initMoney = Number(INIT_MONEY);
+    global.rateOfReturn = roundDecimal((((global.money / INIT_MONEY) - 1) * 100), 3);
 
-    if(DEBUG_MODE === 'true') console.log(global);
+    if (DEBUG_MODE === 'true') console.log(global);
     return global;
+}
+
+// 計算報酬率，參考:https://blog.xuite.net/chingwei/blog/20942533
+function roundDecimal (val, precision) {
+    const size = Math.pow(10, precision);
+    return Math.round(val * size) / size;
 }
 
 function assortLevel(base, moneyResultArr) {
@@ -72,7 +81,7 @@ function assortLevel(base, moneyResultArr) {
         if (item > base * 1.5 && item <= base * 2) global.a4 = global.a4 + 1;
         if (item > base * 2) global.a5 = global.a5 + 1;
     });
-    if(DEBUG_MODE === 'true') console.log(moneyResultArr);
+    if (DEBUG_MODE === 'true') console.log(moneyResultArr);
     return global;
 }
 
