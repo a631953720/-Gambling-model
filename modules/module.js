@@ -4,6 +4,7 @@ const transpoartArr = require('./test');
 const {
     DEBUG_MODE,
     WIN_BONUS_ARR,
+    MIN_BET,
     LOSE_BONUS_ARR
 } = process.env;
 
@@ -48,7 +49,7 @@ function action(interval, _global, times) {
             global.lose = global.lose + 1;
             global.money = global.money - bonus(global.bet, _random);
             global.bet = updateBet(global.bet, interval * -2);
-            if (global.bet <= 0) global.bet = interval;
+            if (global.bet <= 0) global.bet = Number(MIN_BET);
         }
     }
 
