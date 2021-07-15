@@ -1,7 +1,7 @@
 require('dotenv').config();
 const {
-    action,
-    assortLevel
+    assortLevel,
+    runTest
 } = require('./modules/module');
 const exportXlsx = require('./modules/exportFiles');
 const {
@@ -10,10 +10,10 @@ const {
     INIT_BET,
     INIT_MONEY,
     OUTPUT,
-    TEST_TIMES
+    OUTPUT_TYPE
 } = process.env;
 
-function test(_times) {
+function test() {
     const interval = Number(INTERVAL);
     const times = Number(PLAY_TIMES);
     const global = {
@@ -24,13 +24,10 @@ function test(_times) {
         money: Number(INIT_MONEY)
     };
     const base = global.money;
-    const moneyResultArr = [];
-    for (let i = 0; i < _times; i++) {
-        const { money } = action(interval, global, times);
-        moneyResultArr.push(money);
-    }
-    return assortLevel(base, moneyResultArr);
+    const testResult = runTest(interval, global, times);
+
+    return assortLevel(base, testResult, OUTPUT_TYPE);
 }
 
-if (OUTPUT === 'true') exportXlsx(test(TEST_TIMES));
-else console.log(test(TEST_TIMES));
+if (OUTPUT === 'true') exportXlsx(test());
+else console.log(test());

@@ -1,12 +1,13 @@
 require('dotenv').config();
-const transpoartArr = require('./test');
+const transpoartArr = require('./stringToArray');
 
 const {
     DEBUG_MODE,
     WIN_BONUS_ARR,
     MIN_BET,
     LOSE_BONUS_ARR,
-    INIT_MONEY
+    INIT_MONEY,
+    TEST_TIMES
 } = process.env;
 
 const winBonusTable = transpoartArr(WIN_BONUS_ARR);
@@ -32,6 +33,35 @@ function bonus(bet, point) {
     if (point >= 0 && point < 0.1) return bet * loseBonusTable[2];
 
     if (DEBUG_MODE === 'true') console.log(bet, point);
+}
+
+// 計算報酬率，小數點四捨五入參考:https://blog.xuite.net/chingwei/blog/20942533
+function roundDecimal(val, precision) {
+    const size = Math.pow(10, precision);
+    return Math.round(val * size) / size;
+}
+
+function assortLevel(base, moneyResultArr, outputType) {
+    const global = {
+        a1: 0,
+        a2: 0,
+        a3: 0,
+        a4: 0,
+        a5: 0
+    };
+
+    if (outputType === "money") {
+        moneyResultArr.forEach((item) => {
+            if (item <= base * 0.5) global.a1 = global.a1 + 1;
+            if (item > base * 0.5 && item <= base) global.a2 = global.a2 + 1;
+            if (item > base && item <= base * 1.5) global.a3 = global.a3 + 1;
+            if (item > base * 1.5 && item <= base * 2) global.a4 = global.a4 + 1;
+            if (item > base * 2) global.a5 = global.a5 + 1;
+        });
+    }
+
+    if (DEBUG_MODE === 'true') console.log(moneyResultArr);
+    return global;
 }
 
 function action(interval, _global, times) {
@@ -60,29 +90,17 @@ function action(interval, _global, times) {
     return global;
 }
 
-// 計算報酬率，參考:https://blog.xuite.net/chingwei/blog/20942533
-function roundDecimal (val, precision) {
-    const size = Math.pow(10, precision);
-    return Math.round(val * size) / size;
-}
+function runTest(interval, global, times) {
+    const moneyResultArr = [];
+    const rateOfReturnArr = [];
 
-function assortLevel(base, moneyResultArr) {
-    const global = {
-        a1: 0,
-        a2: 0,
-        a3: 0,
-        a4: 0,
-        a5: 0
-    };
-    moneyResultArr.forEach((item) => {
-        if (item <= base * 0.5) global.a1 = global.a1 + 1;
-        if (item > base * 0.5 && item <= base) global.a2 = global.a2 + 1;
-        if (item > base && item <= base * 1.5) global.a3 = global.a3 + 1;
-        if (item > base * 1.5 && item <= base * 2) global.a4 = global.a4 + 1;
-        if (item > base * 2) global.a5 = global.a5 + 1;
-    });
-    if (DEBUG_MODE === 'true') console.log(moneyResultArr);
-    return global;
+    for (let i = 0; i < TEST_TIMES; i++) {
+        const { money, rateOfReturn } = action(interval, global, times);
+        moneyResultArr.push(money);
+        rateOfReturnArr.push(rateOfReturn);
+    }
+
+    return moneyResultArr;
 }
 
 module.exports = {
@@ -90,5 +108,6 @@ module.exports = {
     updateBet,
     bonus,
     action,
-    assortLevel
+    assortLevel,
+    runTest
 };
