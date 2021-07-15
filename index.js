@@ -24,9 +24,8 @@ function test() {
         money: Number(INIT_MONEY)
     };
     const base = global.money;
-    const testResult = runTest(interval, global, times);
-
-    return assortLevel(base, testResult, OUTPUT_TYPE);
+    const testResultObj = runTest(interval, global, times);
+    return assortLevel(base, testResultObj[OUTPUT_TYPE]);
 }
 
 if (OUTPUT === 'true') exportXlsx(test());
