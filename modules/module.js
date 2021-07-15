@@ -13,7 +13,7 @@ const {
 
 const winBonusTable = transpoartArr(WIN_BONUS_ARR);
 const loseBonusTable = transpoartArr(LOSE_BONUS_ARR);
-console.log(winBonusTable)
+
 function random() {
     return Math.random();
 }
@@ -108,10 +108,8 @@ function runTest(interval, global, times) {
 
     for (let i = 0; i < TEST_TIMES; i++) {
         const { money, rateOfReturn } = action(interval, global, times);
-        // console.log(rateOfReturn,"rateOfReturn");
         moneyResultArr.push(money);
         rateOfReturnArr.push(rateOfReturn);
-        console.log(rateOfReturnArr, "rateOfReturnArr");
     }
 
     // if (OUTPUT_TYPE === "money") return moneyResultArr;
