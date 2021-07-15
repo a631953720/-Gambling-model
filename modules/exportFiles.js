@@ -10,7 +10,8 @@ const {
     WIN_BONUS_ARR,
     LOSE_BONUS_ARR,
     DEBUG_MODE,
-    OUTPUT_TYPE
+    OUTPUT_TYPE,
+    OUTPUT_NAME
 } = process.env;
 
 function exportXlsx(params) {
@@ -35,7 +36,7 @@ function exportXlsx(params) {
         }
     };
 
-    xlsx.writeFile(workBook, `./test-${Date.now()}.xlsx`);
+    xlsx.writeFile(workBook, `./${OUTPUT_NAME}-${Date.now()}.xlsx`);
 }
 
 function outputType (params) {
