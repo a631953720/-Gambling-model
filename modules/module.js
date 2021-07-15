@@ -50,7 +50,10 @@ function assortLevel(base, testResultArr) {
         a2: 0,
         a3: 0,
         a4: 0,
-        a5: 0
+        a5: 0,
+        win: 0,
+        lose: 0,
+        winRate: 0
     };
     if (DEBUG_MODE === 'true') console.log("outputType:", OUTPUT_TYPE);
     if (OUTPUT_TYPE === "money") {
@@ -64,15 +67,18 @@ function assortLevel(base, testResultArr) {
     }
 
     if (OUTPUT_TYPE === "rateOfReturn") {
-
         testResultArr.forEach((item) => {
             if (item <= -50) global.a1 = global.a1 + 1;
             if (item > -50 && item <= 0) global.a2 = global.a2 + 1;
             if (item > 0 && item <= 50) global.a3 = global.a3 + 1;
-            if (item > 50 * 1.5 && item <= 100) global.a4 = global.a4 + 1;
+            if (item > 50 && item <= 100) global.a4 = global.a4 + 1;
             if (item > 100) global.a5 = global.a5 + 1;
         });
     }
+
+    global.win = global.a3 + global.a4 + global.a5;
+    global.lose = global.a1 + global.a2;
+    global.winRate = (global.win / (global.win + global.lose)) * 100;
 
     return global;
 }

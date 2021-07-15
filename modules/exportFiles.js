@@ -47,6 +47,10 @@ function outputType (params) {
             ['遊戲結束的現金 是初始現金的1~1.5倍的次數', params.a3],
             ['遊戲結束的現金 是初始現金的1.5~2倍的次數', params.a4],
             ['遊戲結束的現金 是初始現金的2倍以上的次數', params.a5],
+            [],
+            ['獲利人數', params.win],
+            ['虧損人數', params.lose],
+            ['整體勝率', params.winRate],
             []
         ]
     }
@@ -59,6 +63,10 @@ function outputType (params) {
             ['報酬率介於0~50', params.a3],
             ['報酬率介於50~100', params.a4],
             ['報酬率大於100', params.a5],
+            [],
+            ['獲利人數', params.win],
+            ['虧損人數', params.lose],
+            ['整體勝率', params.winRate],
             []
         ]
     }
