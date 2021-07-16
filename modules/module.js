@@ -4,11 +4,11 @@ const transpoartArr = require('./stringToArray');
 const {
     DEBUG_MODE,
     WIN_BONUS_ARR,
-    MIN_BET,
     LOSE_BONUS_ARR,
     INIT_MONEY,
     TEST_TIMES,
-    OUTPUT_TYPE
+    OUTPUT_TYPE,
+    FUNDING_RATIO
 } = process.env;
 
 const winBonusTable = transpoartArr(WIN_BONUS_ARR);
@@ -16,10 +16,6 @@ const loseBonusTable = transpoartArr(LOSE_BONUS_ARR);
 
 function random() {
     return Math.random();
-}
-
-function updateBet(bet, interval) {
-    return bet + interval;
 }
 
 function bonus(bet, point) {
@@ -83,9 +79,10 @@ function assortLevel(base, testResultArr) {
     return global;
 }
 
-function action(interval, _global, times) {
+function action(_global, times) {
     const global = Object.assign({}, _global);
 
+    global.initMoney = Number(INIT_MONEY);
     for (let i = 0; i < times; i++) {
         if (global.money <= 0) break;
         const _random = random();
@@ -93,33 +90,28 @@ function action(interval, _global, times) {
             global.times = global.times + 1;
             global.win = global.win + 1;
             global.money = global.money + bonus(global.bet, _random);
-            global.bet = updateBet(global.bet, interval);
+            global.bet = global.money * Number(FUNDING_RATIO);
         } else {
             global.times = global.times + 1;
             global.lose = global.lose + 1;
             global.money = global.money - bonus(global.bet, _random);
-            global.bet = updateBet(global.bet, interval * -2);
-            if (global.bet <= 0) global.bet = Number(MIN_BET);
+            global.bet = global.money * Number(FUNDING_RATIO);
         }
     }
-    global.initMoney = Number(INIT_MONEY);
     global.rateOfReturn = roundDecimal((((global.money / INIT_MONEY) - 1) * 100), 3);
-
     return global;
 }
 
-function runTest(interval, global, times) {
+function runTest(global, times) {
     const moneyResultArr = [];
     const rateOfReturnArr = [];
 
     for (let i = 0; i < TEST_TIMES; i++) {
-        const { money, rateOfReturn } = action(interval, global, times);
+        const { money, rateOfReturn } = action(global, times);
         moneyResultArr.push(money);
         rateOfReturnArr.push(rateOfReturn);
     }
 
-    // if (OUTPUT_TYPE === "money") return moneyResultArr;
-    // if (OUTPUT_TYPE === "rateOfReturn") return rateOfReturnArr;
     return {
         "money": moneyResultArr,
         "rateOfReturn": rateOfReturnArr
@@ -129,7 +121,6 @@ function runTest(interval, global, times) {
 
 module.exports = {
     random,
-    updateBet,
     bonus,
     action,
     assortLevel,

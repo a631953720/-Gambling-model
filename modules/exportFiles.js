@@ -1,15 +1,12 @@
 require('dotenv').config();
 const xlsx = require('xlsx');
 const {
-    INTERVAL,
     PLAY_TIMES,
     TEST_TIMES,
-    INIT_BET,
-    MIN_BET,
+    FUNDING_RATIO,
     INIT_MONEY,
     WIN_BONUS_ARR,
     LOSE_BONUS_ARR,
-    DEBUG_MODE,
     OUTPUT_TYPE,
     OUTPUT_NAME
 } = process.env;
@@ -18,11 +15,9 @@ function exportXlsx(params) {
     const testTable = outputType(params);
     const testData = [
         ['參數名稱','參數設定'],
-        ['賭金變動幅度',INTERVAL],
         ['每次遊戲的賭博次數',PLAY_TIMES],
         ['重複新一輪遊戲的次數',TEST_TIMES],
-        ['初始賭金',INIT_BET],
-        ['最低賭金',MIN_BET],
+        ['單次下注的現金百分比', `${Number(FUNDING_RATIO) * 100} %`],
         ['初始現金',INIT_MONEY],
         ['勝利獎金參數陣列',WIN_BONUS_ARR],
         ['失敗賠錢參數陣列',LOSE_BONUS_ARR],
